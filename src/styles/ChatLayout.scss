@@ -1,0 +1,149 @@
+$primary-color: #7a2f75;
+$secondary-color: #6c757d;
+$font-size: 16px;
+
+.chat-layout {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    /* increase the height */
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.chat-header {
+    background-color: $primary-color;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+
+    h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+}
+
+.input-text-area {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    height: 40px;
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    resize: none;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(122, 47, 117, 0.3);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.record-icon {
+    animation: pulse 1s infinite;
+}
+
+.chat-body {
+
+    flex: 1;
+    height: 400px;
+    /* adjust the height as needed */
+    overflow: hidden;
+    padding: 20px;
+    height: 400px;
+    /* increase the height */
+
+    .chat-message {
+        display: flex;
+        margin-bottom: 20px;
+
+        &.from-user {
+            justify-content: flex-end;
+
+            .message-content {
+                background-color: $primary-color;
+                color: #fff;
+            }
+        }
+
+        &.from-chatgpt {
+            justify-content: flex-start;
+
+            .message-content {
+                background-color: #f2f2f2;
+                color: #333;
+            }
+        }
+
+        .message-content {
+            border-radius: 10px;
+            max-width: 70%;
+            padding: 10px;
+
+            p {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.chat-footer {
+    background-color: #f2f2f2;
+    padding: 20px;
+
+    form {
+        display: flex;
+
+        input {
+            border: none;
+            border-radius: 5px;
+            flex: 1;
+            font-size: $font-size;
+            padding: 10px;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        button {
+            background-color: $primary-color;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: $font-size;
+            margin-left: 10px;
+            padding: 10px 20px;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        button:hover {
+            background-color: #40bfff;
+            color: #fff;
+            box-shadow: 0px 5px 10px rgba
+        }
+    }
+}
