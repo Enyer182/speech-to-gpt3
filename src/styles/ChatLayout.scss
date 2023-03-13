@@ -1,24 +1,25 @@
-$primary-color: #7a2f75;
-$secondary-color: #6c757d;
-$font-size: 16px;
+$primary-color: #ededed;
+$secondary-color: #f2f2f2;
+$accent-color: #cee0d4;
+$font-size: 20px;
 
 .chat-layout {
-    background-color: #fff;
+    background-color: $primary-color;
     border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     height: 700px;
-    /* increase the height */
-    margin: 0 auto;
+    margin: 100px auto;
     max-width: 800px;
 }
 
 .chat-header {
-    background-color: $primary-color;
-    color: #fff;
+    background-color: #f2d2b6;
+    color: #3f3e3e;
     padding: 20px;
     text-align: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 
     h1 {
         font-size: 24px;
@@ -31,7 +32,8 @@ $font-size: 16px;
     border: none;
     border-radius: 5px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    font-size: 16px;
+    color: #333;
+    font-size: $font-size;
     height: 40px;
     padding: 10px;
     width: 100%;
@@ -40,7 +42,58 @@ $font-size: 16px;
 
     &:focus {
         outline: none;
-        box-shadow: 0 0 0 3px rgba(122, 47, 117, 0.3);
+        box-shadow: 0 0 0 3px #010101;
+    }
+
+    &::placeholder {
+        color: #999;
+    }
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+
+    .chat-message {
+        display: flex;
+        margin-bottom: 20px;
+
+        &.from-user {
+            justify-content: flex-end;
+
+            .message-content {
+                background-color: #fdbd85;
+                color: #545454;
+                border-radius: 20px 20px 0px 20px;
+                border-top-right-radius: 20px;
+                border: 2px solid #fdbd85;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        &.from-chatgpt {
+            justify-content: flex-start;
+
+            .message-content {
+                background-color: #fff;
+                color: #333;
+                border-radius: 20px 20px 20px 0px;
+                border-top-left-radius: 20px;
+                border: 2px solid #d9d9d9;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .message-content {
+            border-radius: 10px;
+            max-width: 70%;
+            padding: 10px;
+
+            p {
+                margin: 0;
+            }
+        }
     }
 }
 
@@ -58,57 +111,16 @@ $font-size: 16px;
     }
 }
 
+
 .record-icon {
     animation: pulse 1s infinite;
+    font-size: 50px;
 }
-
-.chat-body {
-
-    flex: 1;
-    height: 400px;
-    /* adjust the height as needed */
-    overflow: hidden;
-    padding: 20px;
-    height: 400px;
-    /* increase the height */
-
-    .chat-message {
-        display: flex;
-        margin-bottom: 20px;
-
-        &.from-user {
-            justify-content: flex-end;
-
-            .message-content {
-                background-color: $primary-color;
-                color: #fff;
-            }
-        }
-
-        &.from-chatgpt {
-            justify-content: flex-start;
-
-            .message-content {
-                background-color: #f2f2f2;
-                color: #333;
-            }
-        }
-
-        .message-content {
-            border-radius: 10px;
-            max-width: 70%;
-            padding: 10px;
-
-            p {
-                margin: 0;
-            }
-        }
-    }
-}
-
 .chat-footer {
-    background-color: #f2f2f2;
+    background-color: $primary-color;
     padding: 20px;
+
+    
 
     form {
         display: flex;
@@ -126,12 +138,12 @@ $font-size: 16px;
         }
 
         button {
-            background-color: $primary-color;
+            background-color: #fdbd85;
             border: none;
             border-radius: 5px;
             color: #fff;
             cursor: pointer;
-            font-size: $font-size;
+            font-size: 30px;
             margin-left: 10px;
             padding: 10px 20px;
 
@@ -142,7 +154,7 @@ $font-size: 16px;
 
         button:hover {
             background-color: #40bfff;
-            color: #fff;
+            color: #f6ebeba8;
             box-shadow: 0px 5px 10px rgba
         }
     }
