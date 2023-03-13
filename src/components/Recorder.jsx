@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSpeechRecognition } from "react-speech-kit";
-import axios from "axios";
 import MicIcon from "@mui/icons-material/Mic";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import Typing from "./Typing";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-
-const API_URL = "https://api.openai.com/v1/chat/completions";
-const DALLE_API_URL = "https://api.openai.com/v1/images/generations";
-const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
+import { generateImageMessage } from "../utils/generateImage";
+import { getChatbotResponse } from "../utils/sendChatMessage";
+import { interceptScroll, handleScroll } from "../utils/scrolling";
 
 const Recorder = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -27,29 +25,6 @@ const Recorder = () => {
     },
   });
 
-  const generateImage = async (prompt) => {
-    const data = {
-      prompt: prompt,
-      n: 1,
-      size: "1024x1024",
-    };
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`,
-    };
-    try {
-      const response = await axios.post(DALLE_API_URL, data, {
-        headers: headers,
-      });
-      const imageUrl = response.data.data[0].url;
-      setIsSendingMessage(false);
-      return imageUrl;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (transcript === "") return;
@@ -58,69 +33,50 @@ const Recorder = () => {
     setMessages([...messages, newMessage]);
     setIsSendingMessage(true);
 
-    if (transcript.includes("generate an image:")) {
-      // TODO: right now the input for the image generation gets replaced with the image
-      const remainingTranscript = transcript.replace("generate an image", "");
-      const imageUrl = await generateImage(remainingTranscript);
-      if (imageUrl) {
-        const newImageMessage = {
-          from: "chatgpt",
-          content: "Here's your generated image",
-          imageUrl: imageUrl,
-        };
-        setMessages([...messages, newImageMessage]);
-        setGeneratedImageUrl(imageUrl);
-        setIsSendingMessage(false);
+    try {
+      if (transcript.includes("generate an image:")) {
+        const newImageMessage = await generateImageMessage(transcript);
+        if (newImageMessage) {
+          setMessages([...messages, newImageMessage]);
+          setGeneratedImageUrl(newImageMessage.imageUrl);
+          setIsSendingMessage(false);
+        }
+      } else {
+        const { message, trimmedSentences } = await getChatbotResponse(
+          transcript
+        );
+        if (message) {
+          setResponse(message);
+          setIsChatbotTyping(true);
+          let currentIndex = 0;
+          const intervalId = setInterval(() => {
+            setTyping(trimmedSentences.slice(0, currentIndex + 1));
+            currentIndex++;
+            if (currentIndex >= trimmedSentences.length) {
+              clearInterval(intervalId);
+              setIsChatbotTyping(false);
+              setIsSendingMessage(false);
+            }
+          }, 2000);
+          const utterance = new SpeechSynthesisUtterance(message);
+          utterance.lang = "en-US";
+          speechSynthesis.speak(utterance);
+          const newMessages = [
+            ...messages,
+            newMessage,
+            { from: "chatgpt", content: message },
+          ];
+          setMessages(newMessages);
+          setGeneratedImageUrl(null);
+          setTranscript("");
+        }
       }
-    } else {
-      const params = {
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "assistant", content: transcript }],
-      };
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      };
-      try {
-        const response = await axios.post(API_URL, params, { headers });
-        const message = response.data.choices[0].message.content.trim();
-        setResponse(message);
-        // Split the response message into an array of sentences
-        const sentences = message.split(". ");
-        const trimmedSentences = sentences.map((sentence) => sentence.trim());
-
-        // Simulate typing effect by updating the current sentence being typed out
-        setIsChatbotTyping(true);
-        let currentIndex = 0;
-        const intervalId = setInterval(() => {
-          setTyping(trimmedSentences.slice(0, currentIndex + 1));
-          currentIndex++;
-          if (currentIndex >= trimmedSentences.length) {
-            clearInterval(intervalId);
-            setIsChatbotTyping(false);
-            setIsSendingMessage(false);
-          }
-        }, 2000);
-
-        const utterance = new SpeechSynthesisUtterance(message);
-        utterance.lang = "en-US";
-        speechSynthesis.speak(utterance);
-
-        const newMessages = [
-          ...messages,
-          newMessage,
-          { from: "chatgpt", content: message },
-        ];
-        setMessages(newMessages);
-        setGeneratedImageUrl(null);
-        setTranscript("");
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsSendingMessage(false);
-      }
+    } catch (error) {
+      console.log(error);
+      setIsSendingMessage(false);
     }
   };
+
   const handleStop = () => {
     speechSynthesis.cancel();
   };
@@ -135,47 +91,16 @@ const Recorder = () => {
     stop();
   };
 
-  const handleScroll = (scrollHeight, clientHeight) => {
-    let timeoutId;
-    const trimmedSentences = typing.slice().reverse();
-    let currentIndex = 0;
-    const intervalId = setInterval(() => {
-      setTyping(trimmedSentences.slice(0, currentIndex + 1).reverse());
-      currentIndex++;
-      if (currentIndex >= trimmedSentences.length) {
-        // Ensure that the scrollTop value is never greater than the scrollHeight
-        const newScrollTop = Math.max(scrollHeight - clientHeight, 0);
-        chatBodyRef.current.scrollTo({
-          top: newScrollTop,
-          behavior: "smooth",
-        });
-        clearInterval(intervalId);
-      }
-    }, 1500); // adjust the interval time as needed
-    timeoutId = intervalId;
-    return () => clearTimeout(timeoutId);
-  };
-
-  const interceptScroll = () => {
-    if (chatBodyRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = chatBodyRef.current;
-      // Always scroll to the bottom if typing is false or if user is at the bottom of the chat or very close to it
-      if (!typing || scrollTop + clientHeight >= scrollHeight - 50) {
-        chatBodyRef.current.scrollTo({
-          top: chatBodyRef.current.scrollHeight,
-          behavior: "smooth",
-        });
-      } else {
-        // If the user is not at the bottom and typing is true, delay the scroll until the typing is finished
-        handleScroll(scrollHeight, clientHeight);
-      }
-    }
-  };
-
   useEffect(() => {
-    interceptScroll();
+    interceptScroll(
+      chatBodyRef,
+      typing,
+      messages,
+      isSending,
+      isChatbotTyping,
+      setTyping
+    );
   }, [typing, messages, isSending, isChatbotTyping]);
-
   return (
     <div>
       <div className="chat-layout">
