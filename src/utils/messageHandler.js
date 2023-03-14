@@ -7,7 +7,7 @@ const messageHandler = async (
   transcript,
   messages,
   setMessages,
-  setIsChatbotTyping,
+  setIsTypingComplete,
   setTyping,
   setIsSendingMessage,
   setGeneratedImageUrl,
@@ -21,7 +21,6 @@ const messageHandler = async (
   setIsSendingMessage(true);
 
   try {
-    setIsChatbotTyping(true);
     if (transcript.includes(GENERATE_IMAGE_COMMAND)) {
       const newImageMessage = await generateImageMessage(transcript);
       if (newImageMessage) {
@@ -40,7 +39,6 @@ const messageHandler = async (
           currentIndex++;
           if (currentIndex >= trimmedSentences.length) {
             clearInterval(intervalId);
-            setIsChatbotTyping(false);
             setIsSendingMessage(false);
           }
         });
@@ -49,13 +47,12 @@ const messageHandler = async (
           newMessage,
           { from: "chatgpt", content: message },
         ];
+
         setMessages(newMessages);
         setGeneratedImageUrl(null);
         setTranscript("");
       }
     }
-    setIsChatbotTyping(false); // moved outside the if-else statement
-    setIsSendingMessage(false);
   } catch (error) {
     console.log(error);
     setIsSendingMessage(false);

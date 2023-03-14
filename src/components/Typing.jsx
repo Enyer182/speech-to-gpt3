@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-const Typing = ({ message }) => {
+const Typing = ({ message, onTypingStart, onTypingComplete }) => {
   const [text, setText] = useState("");
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (index === 0) {
+      onTypingStart();
+    }
+
     if (index === message.length) {
+      onTypingComplete();
       return;
     }
     const intervalId = setInterval(() => {
@@ -17,7 +22,7 @@ const Typing = ({ message }) => {
       });
     }, 20);
     return () => clearInterval(intervalId);
-  }, [index, message]);
+  }, [index, message, onTypingStart, onTypingComplete]);
 
   return <p>{text}</p>;
 };

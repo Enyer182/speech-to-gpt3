@@ -1,7 +1,7 @@
 import React from "react";
 import Typing from "./Typing";
 
-const ChatMessage = ({ message }) => {
+const ChatMessage = ({ message, setIsSendingMessage, setIsChatbotTyping }) => {
   return (
     <div className={`chat-message from-${message.from}`}>
       <div className="message-content">
@@ -22,7 +22,11 @@ const ChatMessage = ({ message }) => {
                 <p>{message.content}</p>
               </div>
             ) : (
-              <Typing message={message.content} />
+              <Typing
+                message={message.content}
+                onTypingStart={() => setIsChatbotTyping(true)}
+                onTypingComplete={() => setIsChatbotTyping(false)}
+              />
             )}
           </>
         ) : (

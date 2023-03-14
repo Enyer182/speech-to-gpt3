@@ -11,7 +11,7 @@ const ChatFooter = ({
   stopRecording,
   isSending,
   handleStop,
-  isChatbotTyping,
+  isTypingComplete,
   handleSubmit,
   setTranscript,
 }) => {
@@ -50,15 +50,15 @@ const ChatFooter = ({
               width: "60%",
               marginRight: "px",
             }}
-            disabled={isSending && isChatbotTyping}
+            disabled={isSending || isTypingComplete}
           />
           {/* send button */}
           <button
-            disabled={isSending && isChatbotTyping}
+            disabled={isSending || isTypingComplete}
             type="submit"
             style={{ marginLeft: "20px" }}
           >
-            Send
+            {isTypingComplete || isSending ? "..." : "Send"}
           </button>
           {/* voice assistant icons */}
           <div className="voice-assistant">
