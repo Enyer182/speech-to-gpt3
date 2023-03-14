@@ -14,6 +14,34 @@ $font-size: 20px;
     max-width: 800px;
 }
 
+
+@media only screen and (max-width: 600px) {
+    .chat-layout {
+        height: 100vh;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .chat-footer {
+        flex-direction: column;
+    }
+
+    .chat-footer>form {
+        margin-bottom: 40px;
+    }
+
+    .chat-footer>div {
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .chat-footer>div>* {
+        margin-right: 20px;
+    }
+}
+
+
 .chat-header {
     background-color: #f2d2b6;
     color: #3f3e3e;
@@ -26,6 +54,8 @@ $font-size: 20px;
         margin: 0;
     }
 }
+
+
 
 .input-text-area {
     background-color: #fff;
@@ -64,6 +94,7 @@ $font-size: 20px;
 
             .message-content {
                 background-color: #fdbd85;
+                font-size: $font-size;
                 color: #545454;
                 border-radius: 20px 20px 0px 20px;
                 border-top-right-radius: 20px;
@@ -76,6 +107,7 @@ $font-size: 20px;
             justify-content: flex-start;
 
             .message-content {
+                font-size: $font-size;
                 background-color: #fff;
                 color: #333;
                 border-radius: 20px 20px 20px 0px;
@@ -116,11 +148,12 @@ $font-size: 20px;
     animation: pulse 1s infinite;
     font-size: 50px;
 }
+
 .chat-footer {
     background-color: $primary-color;
     padding: 20px;
 
-    
+
 
     form {
         display: flex;
@@ -158,4 +191,77 @@ $font-size: 20px;
             box-shadow: 0px 5px 10px rgba
         }
     }
+
+    .chat-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .chat-footer form {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .chat-footer textarea {
+        flex: 1;
+        height: 100%;
+        resize: none;
+        margin-right: 10px;
+    }
+
+    .chat-footer button {
+        margin-left: 10px;
+    }
+
+    .chat-footer div {
+        display: flex;
+        align-items: center;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .chat-footer {
+            flex-wrap: wrap;
+        }
+
+        .chat-footer form {
+            flex-basis: 100%;
+            margin-bottom: 10px;
+        }
+
+        .chat-footer div {
+            flex-basis: 100%;
+        }
+
+        .chat-footer button,
+        .chat-footer div>* {
+            margin: 0 5px;
+        }
+
+
+        @media only screen and (max-width: 600px) {
+            .voice-assistant {
+                margin-right: 0;
+                margin-left: auto;
+            }
+        }
+
+        .voice-assistant {
+            margin-left: 10px;
+            padding: 10px 20px;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+    }
+
+    .voice-assistant {
+        margin-left: 20px;
+    }
+
 }
