@@ -5,7 +5,6 @@ import messageHandler from "../utils/messageHandler";
 import ChatHeader from "./ChatHeader";
 import ChatMessage from "./ChatMessage";
 import ChatFooter from "./ChatFooter";
-import Typing from "./Typing";
 
 const Recorder = () => {
   const [isRecording, setIsRecording] = useState(false);
