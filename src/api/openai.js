@@ -44,3 +44,13 @@ export const sendChatMessage = async (transcript) => {
     return null;
   }
 };
+
+let timerId;
+
+export const debouncedSendChatMessage = (transcript) => {
+  clearTimeout(timerId);
+
+  timerId = setTimeout(() => {
+    sendChatMessage(transcript);
+  }, 500);
+};

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import { AppContext } from "./AppContext";
 
 const ChatFooter = ({
   isRecording,
@@ -13,19 +13,8 @@ const ChatFooter = ({
   handleStop,
   isTypingComplete,
   handleSubmit,
-  setTranscript,
 }) => {
-  handleStop = () => {
-    setVoiceAssistantActive((prevState) => !prevState);
-    speechSynthesis.cancel();
-  };
-
-  const [voiceAssistantActive, setVoiceAssistantActive] = useState(true);
-
-  // reset voiceAssistantActive when a new message is typed
-  useEffect(() => {
-    setVoiceAssistantActive(true);
-  }, [transcript]);
+  const { dispatch } = useContext(AppContext);
 
   return (
     <div className="chat-footer">
@@ -40,7 +29,9 @@ const ChatFooter = ({
           {/* message input */}
           <textarea
             value={transcript}
-            onChange={(e) => setTranscript(e.target.value)}
+            onChange={(e) =>
+              dispatch({ type: "SET_TRANSCRIPT", payload: e.target.value })
+            }
             type="text"
             placeholder="Type your message here"
             className="input-text-area"
@@ -71,18 +62,12 @@ const ChatFooter = ({
             ) : (
               <MicIcon style={{ fontSize: "50px" }} onClick={startRecording} />
             )}
-            {voiceAssistantActive ? (
-              <RecordVoiceOverIcon
-                className="stop"
-                style={{ fontSize: "50px" }}
-                onClick={handleStop}
-              />
-            ) : (
-              <StopCircleIcon
-                style={{ fontSize: "50px" }}
-                onClick={handleStop}
-              />
-            )}
+
+            <RecordVoiceOverIcon
+              className="stop"
+              style={{ fontSize: "50px" }}
+              onClick={handleStop}
+            />
           </div>
         </div>
       </form>

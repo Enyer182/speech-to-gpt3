@@ -17,6 +17,7 @@
     "react-scripts": "5.0.1",
     "react-speech-kit": "^3.0.1",
     "react-tts": "^1.0.2",
+    "redux": "^4.2.1",
     "web-vitals": "^3.3.0",
     "websocket": "^1.0.34"
   },
