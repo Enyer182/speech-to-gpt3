@@ -12,7 +12,8 @@ const messageHandler = async (
   setIsSendingMessage,
   setGeneratedImageUrl,
   setResponse,
-  setTranscript
+  setTranscript,
+  voiceAssistantActive
 ) => {
   if (transcript === "") return;
   setTranscript("");
@@ -30,7 +31,8 @@ const messageHandler = async (
       }
     } else {
       const { message, trimmedSentences } = await getChatbotResponse(
-        transcript
+        transcript,
+        voiceAssistantActive
       );
       if (message) {
         setResponse(message);

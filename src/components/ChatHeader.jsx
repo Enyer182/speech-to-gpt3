@@ -1,9 +1,6 @@
-import React, { useContext } from "react";
-import { AppContext } from "./AppContext";
+import React from "react";
 
 const ChatHeader = () => {
-  const { state } = useContext(AppContext);
-
   return (
     <div className="chat-header">
       <h1>Chat with ChatGPT</h1>
