@@ -5,6 +5,7 @@ import { AppContext } from "./AppContext";
 const ChatMessage = ({ message }) => {
   const { dispatch } = useContext(AppContext);
 
+  const { state } = useContext(AppContext);
   const setIsChatbotTyping = (isTyping) => {
     dispatch({ type: "SET_IS_TYPING_COMPLETE", payload: !isTyping });
   };
@@ -29,11 +30,13 @@ const ChatMessage = ({ message }) => {
                 <p>{message.content}</p>
               </div>
             ) : (
-              <Typing
-                message={message.content}
-                onTypingStart={() => setIsChatbotTyping(true)}
-                onTypingComplete={() => setIsChatbotTyping(false)}
-              />
+              <div>
+                <Typing
+                  message={message.content}
+                  onTypingStart={() => setIsChatbotTyping(true)}
+                  onTypingComplete={() => setIsChatbotTyping(false)}
+                />
+              </div>
             )}
           </>
         ) : (

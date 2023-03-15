@@ -46,11 +46,15 @@ export const sendChatMessage = async (transcript) => {
 };
 
 let timerId;
+const delay = 1;
 
 export const debouncedSendChatMessage = (transcript) => {
   clearTimeout(timerId);
 
-  timerId = setTimeout(() => {
-    sendChatMessage(transcript);
-  }, 500);
+  return new Promise((resolve) => {
+    timerId = setTimeout(async () => {
+      const response = await sendChatMessage(transcript);
+      resolve(response);
+    }, delay);
+  });
 };

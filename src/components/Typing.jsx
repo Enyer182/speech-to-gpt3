@@ -5,9 +5,8 @@ const Typing = ({ message }) => {
   const { dispatch } = useContext(AppContext);
   const [text, setText] = useState("");
   const [index, setIndex] = useState(0);
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
 
-  const TYPING_DELAY = 10;
+  const TYPING_SPEED = 10;
 
   useEffect(() => {
     if (index === 0) {
@@ -15,7 +14,6 @@ const Typing = ({ message }) => {
     }
 
     if (index === message.length) {
-      setIsTypingComplete(true);
       dispatch({ type: "SET_IS_TYPING", payload: false });
       return;
     }
@@ -26,7 +24,7 @@ const Typing = ({ message }) => {
         setIndex(nextIndex);
         return prevText + currentChar;
       });
-    }, TYPING_DELAY);
+    }, TYPING_SPEED);
     return () => clearInterval(intervalId);
   }, [index, message, dispatch]);
 

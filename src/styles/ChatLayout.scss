@@ -13,6 +13,20 @@ $font-size: 20px;
     margin: 100px auto;
     max-width: 800px;
 }
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.75s linear infinite;
+}
 
 
 @media only screen and (max-width: 600px) {
@@ -263,5 +277,7 @@ $font-size: 20px;
     .voice-assistant {
         margin-left: 20px;
     }
+
+
 
 }

@@ -48,6 +48,17 @@ const reducer = (state, action) => {
         ...state,
         isTypingComplete: action.payload,
       };
+
+    case "SET_IS_LOADING":
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
+    case "SET_ERROR":
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
     default:
       return state;
   }

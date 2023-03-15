@@ -1,7 +1,7 @@
-import { sendChatMessage } from "../api/openai";
+import { debouncedSendChatMessage } from "../api/openai";
 
 export const getChatbotResponse = async (transcript) => {
-  const message = await sendChatMessage(transcript);
+  const message = await debouncedSendChatMessage(transcript);
   if (message) {
     const sentences = message.split(". ");
     const trimmedSentences = sentences.map((sentence) => sentence.trim());
@@ -13,4 +13,5 @@ export const getChatbotResponse = async (transcript) => {
       trimmedSentences: trimmedSentences,
     };
   }
+  return {};
 };

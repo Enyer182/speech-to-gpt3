@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
+import "./styles/ChatLayout.scss";
 import reportWebVitals from "./reportWebVitals";
 import AppProvider from "./components/AppProvider";
 import Recorder from "./components/Recorder";

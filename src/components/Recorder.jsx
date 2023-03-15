@@ -15,10 +15,8 @@ const Recorder = () => {
       dispatch({ type: "SET_TRANSCRIPT", payload: result });
     },
   });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch({ type: "SET_IS_LOADING", payload: true });
     dispatch({ type: "SET_ERROR", payload: null });
     try {
       await messageHandler(
@@ -71,11 +69,19 @@ const Recorder = () => {
       state.isChatbotTyping,
       (typing) => dispatch({ type: "SET_TYPING", payload: typing })
     );
-  }, [dispatch, state.typing, state.messages, state.isSending, chatBodyRef]);
+  }, [
+    dispatch,
+    state.typing,
+    state.messages,
+    state.isSending,
+    chatBodyRef,
+    state.isChatbotTyping,
+  ]);
   return (
     <div>
       <div className="chat-layout">
         <ChatHeader />
+        {state.error && <div className="error">{state.error.message}</div>}
         <div className="chat-body" ref={chatBodyRef}>
           {state.messages.map((message, index) => (
             <ChatMessage
