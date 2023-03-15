@@ -2,7 +2,9 @@ import React, { useContext } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
 import { AppContext } from "./AppContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ChatFooter = ({
   isRecording,
@@ -13,6 +15,7 @@ const ChatFooter = ({
   handleStop,
   isTypingComplete,
   handleSubmit,
+  voiceAssistantActive,
 }) => {
   const { dispatch, state } = useContext(AppContext);
 
@@ -23,7 +26,7 @@ const ChatFooter = ({
 
   return (
     <div className="chat-footer">
-      {state.isLoading && <div className="loading-spinner"></div>}
+      {state.isLoading && <CircularProgress />}
       <form onSubmit={onSubmit}>
         <div
           style={{
@@ -68,12 +71,18 @@ const ChatFooter = ({
             ) : (
               <MicIcon style={{ fontSize: "50px" }} onClick={startRecording} />
             )}
-
-            <RecordVoiceOverIcon
-              className="stop"
-              style={{ fontSize: "50px" }}
-              onClick={handleStop}
-            />
+            {voiceAssistantActive ? (
+              <RecordVoiceOverIcon
+                className="stop"
+                style={{ fontSize: "50px" }}
+                onClick={handleStop}
+              />
+            ) : (
+              <StopCircleIcon
+                style={{ fontSize: "50px" }}
+                onClick={handleStop}
+              />
+            )}
           </div>
         </div>
       </form>

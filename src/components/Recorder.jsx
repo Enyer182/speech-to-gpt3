@@ -33,7 +33,8 @@ const Recorder = () => {
             payload: generatedImageUrl,
           }),
         (response) => dispatch({ type: "SET_RESPONSE", payload: response }),
-        () => dispatch({ type: "SET_TRANSCRIPT", payload: "" })
+        () => dispatch({ type: "SET_TRANSCRIPT", payload: "" }),
+        state.voiceAssistantActive
       );
     } catch (error) {
       dispatch({ type: "SET_ERROR", payload: error });
@@ -76,6 +77,8 @@ const Recorder = () => {
     state.isSending,
     chatBodyRef,
     state.isChatbotTyping,
+    state.isTypingComplete,
+    state.isSendingMessage,
   ]);
   return (
     <div>
