@@ -14,11 +14,17 @@ const ChatFooter = ({
   isTypingComplete,
   handleSubmit,
 }) => {
-  const { dispatch } = useContext(AppContext);
+  const { dispatch, state } = useContext(AppContext);
+
+  const onSubmit = (e) => {
+    handleSubmit(e);
+    dispatch({ type: "SET_IS_LOADING", payload: true });
+  };
 
   return (
     <div className="chat-footer">
-      <form onSubmit={handleSubmit}>
+      {state.isLoading && <div className="loading-spinner"></div>}
+      <form onSubmit={onSubmit}>
         <div
           style={{
             display: "flex",
