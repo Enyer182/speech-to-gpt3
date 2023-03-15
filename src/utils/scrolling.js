@@ -36,7 +36,7 @@ export const interceptScroll = (
   const { scrollTop, scrollHeight, clientHeight } = chatBodyRef.current;
 
   // Always scroll to the bottom if user is at the bottom of the chat or very close to it
-  if (!typing && scrollTop + clientHeight >= scrollHeight - 50) {
+  if (!typing && scrollTop + clientHeight >= scrollHeight - 20) {
     chatBodyRef.current.scrollTo({
       top: chatBodyRef.current.scrollHeight,
       behavior: "smooth",

@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AppContext } from "./AppContext";
 
-const Typing = ({ message, onTypingStart, onTypingComplete }) => {
+const Typing = ({ message }) => {
+  const { dispatch } = useContext(AppContext);
   const [text, setText] = useState("");
   const [index, setIndex] = useState(0);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  const TYPING_DELAY = 10;
 
   useEffect(() => {
     if (index === 0) {
-      onTypingStart();
+      dispatch({ type: "SET_IS_TYPING", payload: true });
     }
 
     if (index === message.length) {
-      onTypingComplete();
+      setIsTypingComplete(true);
+      dispatch({ type: "SET_IS_TYPING", payload: false });
       return;
     }
     const intervalId = setInterval(() => {
@@ -20,9 +26,9 @@ const Typing = ({ message, onTypingStart, onTypingComplete }) => {
         setIndex(nextIndex);
         return prevText + currentChar;
       });
-    }, 20);
+    }, TYPING_DELAY);
     return () => clearInterval(intervalId);
-  }, [index, message, onTypingStart, onTypingComplete]);
+  }, [index, message, dispatch]);
 
   return <p>{text}</p>;
 };

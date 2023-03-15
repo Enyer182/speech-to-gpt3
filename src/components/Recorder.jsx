@@ -1,72 +1,93 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useContext, useEffect } from "react";
 import { useSpeechRecognition } from "react-speech-kit";
 import { interceptScroll } from "../utils/scrolling";
 import messageHandler from "../utils/messageHandler";
 import ChatHeader from "./ChatHeader";
 import ChatMessage from "./ChatMessage";
 import ChatFooter from "./ChatFooter";
+import { AppContext } from "./AppContext";
 
 const Recorder = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const [response, setResponse] = useState("");
-  const [messages, setMessages] = useState([]);
+  const { state, dispatch } = useContext(AppContext);
   const chatBodyRef = useRef(null);
-  const [typing, setTyping] = useState("");
-  const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
-  const [isSending, setIsSendingMessage] = useState(false);
-  const [voiceAssistantActive, setVoiceAssistantActive] = useState(true);
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
-
   const { listen, stop } = useSpeechRecognition({
     onResult: (result) => {
-      setTranscript(result);
+      dispatch({ type: "SET_TRANSCRIPT", payload: result });
     },
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await messageHandler(
-      transcript,
-      messages,
-      setMessages,
-      setIsTypingComplete,
-      setTyping,
-      setIsSendingMessage,
-      setGeneratedImageUrl,
-      setResponse,
-      setTranscript
-    );
+    dispatch({ type: "SET_IS_LOADING", payload: true });
+    dispatch({ type: "SET_ERROR", payload: null });
+    try {
+      await messageHandler(
+        state.transcript,
+        state.messages,
+        (messages) => dispatch({ type: "SET_MESSAGES", payload: messages }),
+        () => dispatch({ type: "SET_IS_TYPING_COMPLETE", payload: true }),
+        (typing) => dispatch({ type: "SET_TYPING", payload: typing }),
+        (isSending) =>
+          dispatch({ type: "SET_IS_SENDING_MESSAGE", payload: isSending }),
+        (generatedImageUrl) =>
+          dispatch({
+            type: "SET_GENERATED_IMAGE_URL",
+            payload: generatedImageUrl,
+          }),
+        (response) => dispatch({ type: "SET_RESPONSE", payload: response }),
+        () => dispatch({ type: "SET_TRANSCRIPT", payload: "" })
+      );
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: error });
+    } finally {
+      dispatch({ type: "SET_IS_LOADING", payload: false });
+    }
   };
+
   const handleStop = () => {
-    voiceAssistantActive
-      ? setVoiceAssistantActive(false)
-      : setVoiceAssistantActive(true);
+    dispatch({
+      type: "SET_VOICE_ASSISTANT_ACTIVE",
+      payload: !state.voiceAssistantActive,
+    });
     speechSynthesis.cancel();
   };
 
   const startRecording = async () => {
-    setIsRecording(true);
+    dispatch({ type: "SET_IS_RECORDING", payload: true });
     listen();
   };
 
   const stopRecording = () => {
-    setIsRecording(false);
+    dispatch({ type: "SET_IS_RECORDING", payload: false });
     stop();
   };
 
   useEffect(() => {
-    interceptScroll(chatBodyRef, typing, messages, isSending, setTyping);
-  }, [typing, messages, isSending, chatBodyRef, setTyping]);
+    interceptScroll(
+      chatBodyRef,
+      state.typing,
+      state.messages,
+      state.isSending,
+      state.isChatbotTyping,
+      (typing) => dispatch({ type: "SET_TYPING", payload: typing })
+    );
+  }, [dispatch, state.typing, state.messages, state.isSending, chatBodyRef]);
   return (
     <div>
       <div className="chat-layout">
         <ChatHeader />
         <div className="chat-body" ref={chatBodyRef}>
-          {messages.map((message, index) => (
+          {state.messages.map((message, index) => (
             <ChatMessage
-              setIsSendingMessage={setIsSendingMessage}
-              setIsChatbotTyping={setIsTypingComplete}
+              setIsSendingMessage={(isSending) =>
+                dispatch({ type: "SET_IS_SENDING_MESSAGE", payload: isSending })
+              }
+              setIsChatbotTyping={(isTypingComplete) =>
+                dispatch({
+                  type: "SET_IS_TYPING_COMPLETE",
+                  payload: isTypingComplete,
+                })
+              }
               key={index}
               message={message}
             />
@@ -74,17 +95,20 @@ const Recorder = () => {
         </div>
         <div>
           <ChatFooter
-            isRecording={isRecording}
-            transcript={transcript}
+            isRecording={state.isRecording}
+            transcript={state.transcript}
             startRecording={startRecording}
             stopRecording={stopRecording}
             handleStop={handleStop}
-            isSending={isSending}
-            isChatbotTyping={isTypingComplete}
+            isSending={state.isSending}
+            isChatbotTyping={state.isTypingComplete}
             handleSubmit={handleSubmit}
-            setTranscript={setTranscript}
-            voiceAssistantActive={voiceAssistantActive}
-            isTypingComplete={isTypingComplete}
+            setTranscript={(transcript) =>
+              dispatch({ type: "SET_TRANSCRIPT", payload: transcript })
+            }
+            voiceAssistantActive={state.voiceAssistantActive}
+            isTypingComplete={state.isTypingComplete}
+            generatedImageUrl={state.generatedImageUrl}
           />
         </div>
       </div>
