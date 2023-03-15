@@ -24,6 +24,7 @@ const messageHandler = async (
     if (transcript.includes(GENERATE_IMAGE_COMMAND)) {
       const newImageMessage = await generateImageMessage(transcript);
       if (newImageMessage) {
+        setIsSendingMessage(false);
         setMessages([...messages, newImageMessage]);
         setGeneratedImageUrl(newImageMessage.imageUrl);
       }
@@ -47,7 +48,6 @@ const messageHandler = async (
           newMessage,
           { from: "chatgpt", content: message },
         ];
-
         setMessages(newMessages);
         setGeneratedImageUrl(null);
         setTranscript("");
