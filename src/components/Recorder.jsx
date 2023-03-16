@@ -51,15 +51,15 @@ const Recorder = () => {
     speechSynthesis.cancel();
   };
 
-  const startRecording = async () => {
-    dispatch({ type: "SET_IS_RECORDING", payload: true });
-    listen();
-  };
+  // const startRecording = async () => {
+  //   dispatch({ type: "SET_IS_RECORDING", payload: true });
+  //   listen();
+  // };
 
-  const stopRecording = () => {
-    dispatch({ type: "SET_IS_RECORDING", payload: false });
-    stop();
-  };
+  // const stopRecording = () => {
+  //   dispatch({ type: "SET_IS_RECORDING", payload: false });
+  //   stop();
+  // };
 
   useEffect(() => {
     interceptScroll(
@@ -103,22 +103,7 @@ const Recorder = () => {
           ))}
         </div>
         <div>
-          <ChatFooter
-            isRecording={state.isRecording}
-            transcript={state.transcript}
-            startRecording={startRecording}
-            stopRecording={stopRecording}
-            handleStop={handleStop}
-            isSending={state.isSending}
-            isChatbotTyping={state.isTypingComplete}
-            handleSubmit={handleSubmit}
-            setTranscript={(transcript) =>
-              dispatch({ type: "SET_TRANSCRIPT", payload: transcript })
-            }
-            voiceAssistantActive={state.voiceAssistantActive}
-            isTypingComplete={state.isTypingComplete}
-            generatedImageUrl={state.generatedImageUrl}
-          />
+          <ChatFooter handleStop={handleStop} handleSubmit={handleSubmit} />
         </div>
       </div>
     </div>

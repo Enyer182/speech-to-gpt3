@@ -6,12 +6,7 @@ import StopCircleIcon from "@mui/icons-material/StopCircle";
 import { AppContext } from "./AppContext";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const ChatFooter = ({
-  isRecording,
-  handleStop,
-  handleSubmit,
-  voiceAssistantActive,
-}) => {
+const ChatFooter = ({ handleStop, handleSubmit }) => {
   const { dispatch, state } = useContext(AppContext);
 
   const onSubmit = (e) => {
@@ -69,7 +64,7 @@ const ChatFooter = ({
                 onClick={state.startRecording}
               />
             )}
-            {voiceAssistantActive ? (
+            {state.voiceAssistantActive ? (
               <RecordVoiceOverIcon
                 className="stop"
                 style={{ fontSize: "50px" }}
