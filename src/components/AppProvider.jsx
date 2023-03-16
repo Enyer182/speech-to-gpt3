@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import { initialState, AppContext } from "./AppContext";
 
 const reducer = (state, action) => {
+  console.log("action: ", action);
   switch (action.type) {
     case "SET_IS_RECORDING":
       return {
@@ -23,11 +24,7 @@ const reducer = (state, action) => {
         ...state,
         messages: action.payload,
       };
-    case "SET_TYPING":
-      return {
-        ...state,
-        typing: action.payload,
-      };
+
     case "SET_GENERATED_IMAGE_URL":
       return {
         ...state,
@@ -43,6 +40,13 @@ const reducer = (state, action) => {
         ...state,
         voiceAssistantActive: action.payload,
       };
+
+    case "TOGGLE_VOICE_ASSISTANT_ACTIVE":
+      return {
+        ...state,
+        voiceAssistantActive: !state.voiceAssistantActive,
+      };
+
     case "SET_IS_TYPING_COMPLETE":
       return {
         ...state,

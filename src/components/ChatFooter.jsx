@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
@@ -29,13 +29,20 @@ const ChatFooter = ({ handleSubmit }) => {
     dispatch({ type: "SET_IS_RECORDING", payload: false });
     stop();
   };
+
   const handleStop = () => {
-    dispatch({
-      type: "SET_VOICE_ASSISTANT_ACTIVE",
-      payload: !state.voiceAssistantActive,
-    });
-    speechSynthesis.cancel();
+    dispatch({ type: "TOGGLE_VOICE_ASSISTANT_ACTIVE" });
+    if (state.voiceAssistantActive) {
+      speechSynthesis.pause();
+    } else {
+      speechSynthesis.resume();
+    }
   };
+  useEffect(() => {
+    console.log("voiceAssistantActive:", state.voiceAssistantActive);
+  }, [state.voiceAssistantActive]);
+
+  // ... other code
 
   return (
     <div className="chat-footer">

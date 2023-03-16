@@ -40,6 +40,15 @@ const Recorder = () => {
       payload: voiceAssistantActive,
     });
   };
+
+  const setErrorCallback = (error) => {
+    dispatch({ type: "SET_ERROR", payload: error });
+  };
+
+  const setLoadingCallback = (isLoading) => {
+    dispatch({ type: "SET_IS_LOADING", payload: isLoading });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: "SET_ERROR", payload: null });
@@ -53,30 +62,13 @@ const Recorder = () => {
         setIsGeneratingImageCallback,
         setResponseCallback,
         setTranscriptCallback,
-
-        (isSending) =>
-          dispatch({ type: "SET_IS_SENDING_MESSAGE", payload: isSending }),
-        (generatedImageUrl) =>
-          dispatch({
-            type: "SET_GENERATED_IMAGE_URL",
-            payload: generatedImageUrl,
-          }),
-        () => dispatch({ type: "SET_TRANSCRIPT", payload: "" }),
-        state.voiceAssistantActive
+        voiceAssistantActiveCallback
       );
     } catch (error) {
-      dispatch({ type: "SET_ERROR", payload: error });
+      setErrorCallback(error);
     } finally {
-      dispatch({ type: "SET_IS_LOADING", payload: false });
+      setLoadingCallback(false);
     }
-  };
-
-  const handleStop = () => {
-    dispatch({
-      type: "SET_VOICE_ASSISTANT_ACTIVE",
-      payload: !state.voiceAssistantActive,
-    });
-    speechSynthesis.cancel();
   };
 
   useEffect(() => {
@@ -121,7 +113,7 @@ const Recorder = () => {
           ))}
         </div>
         <div>
-          <ChatFooter handleStop={handleStop} handleSubmit={handleSubmit} />
+          <ChatFooter handleSubmit={handleSubmit} />
         </div>
       </div>
     </div>
