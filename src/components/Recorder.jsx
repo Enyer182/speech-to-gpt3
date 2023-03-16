@@ -1,5 +1,4 @@
 import React, { useRef, useContext, useEffect } from "react";
-import { useSpeechRecognition } from "react-speech-kit";
 import { interceptScroll } from "../utils/scrolling";
 import messageHandler from "../utils/messageHandler";
 import ChatHeader from "./ChatHeader";
@@ -10,11 +9,6 @@ import { AppContext } from "./AppContext";
 const Recorder = () => {
   const { state, dispatch } = useContext(AppContext);
   const chatBodyRef = useRef(null);
-  const { listen, stop } = useSpeechRecognition({
-    onResult: (result) => {
-      dispatch({ type: "SET_TRANSCRIPT", payload: result });
-    },
-  });
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: "SET_ERROR", payload: null });
@@ -50,16 +44,6 @@ const Recorder = () => {
     });
     speechSynthesis.cancel();
   };
-
-  // const startRecording = async () => {
-  //   dispatch({ type: "SET_IS_RECORDING", payload: true });
-  //   listen();
-  // };
-
-  // const stopRecording = () => {
-  //   dispatch({ type: "SET_IS_RECORDING", payload: false });
-  //   stop();
-  // };
 
   useEffect(() => {
     interceptScroll(

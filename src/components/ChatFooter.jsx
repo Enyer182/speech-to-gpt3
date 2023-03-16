@@ -5,13 +5,36 @@ import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import { AppContext } from "./AppContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useSpeechRecognition } from "react-speech-kit";
 
-const ChatFooter = ({ handleStop, handleSubmit }) => {
+const ChatFooter = ({ handleSubmit }) => {
   const { dispatch, state } = useContext(AppContext);
 
+  const { listen, stop } = useSpeechRecognition({
+    onResult: (result) => {
+      dispatch({ type: "SET_TRANSCRIPT", payload: result });
+    },
+  });
   const onSubmit = (e) => {
     handleSubmit(e);
     dispatch({ type: "SET_IS_LOADING", payload: true });
+  };
+
+  const startRecording = async () => {
+    dispatch({ type: "SET_IS_RECORDING", payload: true });
+    listen();
+  };
+
+  const stopRecording = () => {
+    dispatch({ type: "SET_IS_RECORDING", payload: false });
+    stop();
+  };
+  const handleStop = () => {
+    dispatch({
+      type: "SET_VOICE_ASSISTANT_ACTIVE",
+      payload: !state.voiceAssistantActive,
+    });
+    speechSynthesis.cancel();
   };
 
   return (
@@ -56,13 +79,10 @@ const ChatFooter = ({ handleStop, handleSubmit }) => {
               <GraphicEqIcon
                 className="record-icon"
                 style={{ fontSize: "50px" }}
-                onClick={state.stopRecording}
+                onClick={stopRecording}
               />
             ) : (
-              <MicIcon
-                style={{ fontSize: "50px" }}
-                onClick={state.startRecording}
-              />
+              <MicIcon style={{ fontSize: "50px" }} onClick={startRecording} />
             )}
             {state.voiceAssistantActive ? (
               <RecordVoiceOverIcon
