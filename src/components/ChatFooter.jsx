@@ -8,12 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const ChatFooter = ({
   isRecording,
-  transcript,
-  startRecording,
-  stopRecording,
-  isSending,
   handleStop,
-  isTypingComplete,
   handleSubmit,
   voiceAssistantActive,
 }) => {
@@ -37,7 +32,7 @@ const ChatFooter = ({
         >
           {/* message input */}
           <textarea
-            value={transcript}
+            value={state.transcript}
             onChange={(e) =>
               dispatch({ type: "SET_TRANSCRIPT", payload: e.target.value })
             }
@@ -50,26 +45,29 @@ const ChatFooter = ({
               width: "60%",
               marginRight: "px",
             }}
-            disabled={isSending || isTypingComplete}
+            disabled={state.isSending || state.isTypingComplete}
           />
           {/* send button */}
           <button
-            disabled={isSending || isTypingComplete}
+            disabled={state.isSending || state.isTypingComplete}
             type="submit"
             style={{ marginLeft: "20px" }}
           >
-            {isTypingComplete || isSending ? "..." : "Send"}
+            {state.isTypingComplete || state.isSending ? "..." : "Send"}
           </button>
           {/* voice assistant icons */}
           <div className="voice-assistant">
-            {isRecording ? (
+            {state.isRecording ? (
               <GraphicEqIcon
                 className="record-icon"
                 style={{ fontSize: "50px" }}
-                onClick={stopRecording}
+                onClick={state.stopRecording}
               />
             ) : (
-              <MicIcon style={{ fontSize: "50px" }} onClick={startRecording} />
+              <MicIcon
+                style={{ fontSize: "50px" }}
+                onClick={state.startRecording}
+              />
             )}
             {voiceAssistantActive ? (
               <RecordVoiceOverIcon
