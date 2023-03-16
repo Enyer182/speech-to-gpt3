@@ -8,7 +8,6 @@ const messageHandler = async (
   messages,
   setMessages,
   setIsTypingComplete,
-  setTyping,
   setIsSendingMessage,
   setGeneratedImageUrl,
   setResponse,
@@ -38,7 +37,7 @@ const messageHandler = async (
         setResponse(message);
         let currentIndex = 0;
         const intervalId = setInterval(() => {
-          setTyping(trimmedSentences.slice(0, currentIndex + 1).reverse());
+          setIsTypingComplete(false);
           currentIndex++;
           if (currentIndex >= trimmedSentences.length) {
             clearInterval(intervalId);
@@ -50,9 +49,9 @@ const messageHandler = async (
           newMessage,
           { from: "chatgpt", content: message },
         ];
+        setTranscript("");
         setMessages(newMessages);
         setGeneratedImageUrl(null);
-        setTranscript("");
       }
     }
   } catch (error) {

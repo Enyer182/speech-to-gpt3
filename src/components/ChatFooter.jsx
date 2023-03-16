@@ -5,23 +5,36 @@ import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import { AppContext } from "./AppContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useSpeechRecognition } from "react-speech-kit";
 
-const ChatFooter = ({
-  isRecording,
-  transcript,
-  startRecording,
-  stopRecording,
-  isSending,
-  handleStop,
-  isTypingComplete,
-  handleSubmit,
-  voiceAssistantActive,
-}) => {
+const ChatFooter = ({ handleSubmit }) => {
   const { dispatch, state } = useContext(AppContext);
 
+  const { listen, stop } = useSpeechRecognition({
+    onResult: (result) => {
+      dispatch({ type: "SET_TRANSCRIPT", payload: result });
+    },
+  });
   const onSubmit = (e) => {
     handleSubmit(e);
     dispatch({ type: "SET_IS_LOADING", payload: true });
+  };
+
+  const startRecording = async () => {
+    dispatch({ type: "SET_IS_RECORDING", payload: true });
+    listen();
+  };
+
+  const stopRecording = () => {
+    dispatch({ type: "SET_IS_RECORDING", payload: false });
+    stop();
+  };
+  const handleStop = () => {
+    dispatch({
+      type: "SET_VOICE_ASSISTANT_ACTIVE",
+      payload: !state.voiceAssistantActive,
+    });
+    speechSynthesis.cancel();
   };
 
   return (
@@ -37,7 +50,7 @@ const ChatFooter = ({
         >
           {/* message input */}
           <textarea
-            value={transcript}
+            value={state.transcript}
             onChange={(e) =>
               dispatch({ type: "SET_TRANSCRIPT", payload: e.target.value })
             }
@@ -50,19 +63,19 @@ const ChatFooter = ({
               width: "60%",
               marginRight: "px",
             }}
-            disabled={isSending || isTypingComplete}
+            disabled={state.isSendingMessage || state.isTypingComplete}
           />
           {/* send button */}
           <button
-            disabled={isSending || isTypingComplete}
+            disabled={state.isSendingMessage || state.isTypingComplete}
             type="submit"
             style={{ marginLeft: "20px" }}
           >
-            {isTypingComplete || isSending ? "..." : "Send"}
+            {state.isSendingMessage || state.isTypingComplete ? "..." : "Send"}
           </button>
           {/* voice assistant icons */}
           <div className="voice-assistant">
-            {isRecording ? (
+            {state.isRecording ? (
               <GraphicEqIcon
                 className="record-icon"
                 style={{ fontSize: "50px" }}
@@ -71,7 +84,7 @@ const ChatFooter = ({
             ) : (
               <MicIcon style={{ fontSize: "50px" }} onClick={startRecording} />
             )}
-            {voiceAssistantActive ? (
+            {state.voiceAssistantActive ? (
               <RecordVoiceOverIcon
                 className="stop"
                 style={{ fontSize: "50px" }}

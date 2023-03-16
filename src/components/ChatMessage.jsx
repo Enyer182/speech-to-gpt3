@@ -1,15 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import Typing from "./Typing";
-import { AppContext } from "./AppContext";
 
-const ChatMessage = ({ message }) => {
-  const { dispatch } = useContext(AppContext);
-
-  const { state } = useContext(AppContext);
-  const setIsChatbotTyping = (isTyping) => {
-    dispatch({ type: "SET_IS_TYPING_COMPLETE", payload: !isTyping });
-  };
-
+const ChatMessage = ({ message, setIsChatbotTyping }) => {
   return (
     <div className={`chat-message from-${message.from}`}>
       <div className="message-content">
@@ -30,13 +22,11 @@ const ChatMessage = ({ message }) => {
                 <p>{message.content}</p>
               </div>
             ) : (
-              <div>
-                <Typing
-                  message={message.content}
-                  onTypingStart={() => setIsChatbotTyping(true)}
-                  onTypingComplete={() => setIsChatbotTyping(false)}
-                />
-              </div>
+              <Typing
+                message={message.content}
+                onTypingStart={() => setIsChatbotTyping(true)}
+                onTypingComplete={() => setIsChatbotTyping(false)}
+              />
             )}
           </>
         ) : (
