@@ -6,12 +6,13 @@ export const initialState = {
   transcript: "",
   response: "",
   messages: [],
-  isSending: [],
+  isSending: false,
   isSendingMessage: false,
   generatedImageUrl: null,
   voiceAssistantActive: true,
   isTypingComplete: false,
   typing: "",
+  isSpeechPaused: false,
 };
 
 export const AppContext = React.createContext(initialState);
