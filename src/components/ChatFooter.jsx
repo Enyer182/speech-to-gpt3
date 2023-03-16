@@ -63,15 +63,15 @@ const ChatFooter = ({ handleSubmit }) => {
               width: "60%",
               marginRight: "px",
             }}
-            disabled={state.isSending || state.isTypingComplete}
+            disabled={state.isSendingMessage || state.isTypingComplete}
           />
           {/* send button */}
           <button
-            disabled={state.isSending || state.isTypingComplete}
+            disabled={state.isSendingMessage || state.isTypingComplete}
             type="submit"
             style={{ marginLeft: "20px" }}
           >
-            {state.isTypingComplete || state.isSending ? "..." : "Send"}
+            {state.isSendingMessage || state.isTypingComplete ? "..." : "Send"}
           </button>
           {/* voice assistant icons */}
           <div className="voice-assistant">
