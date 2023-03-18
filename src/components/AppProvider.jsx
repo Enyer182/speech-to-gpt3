@@ -2,7 +2,6 @@ import React, { useReducer } from "react";
 import { initialState, AppContext } from "./AppContext";
 
 const reducer = (state, action) => {
-  console.log("action: ", action);
   switch (action.type) {
     case "SET_IS_RECORDING":
       return {
@@ -63,6 +62,13 @@ const reducer = (state, action) => {
         ...state,
         isLoading: action.payload,
       };
+
+    case "SET_IS_CHATBOT_TYPING":
+      return {
+        ...state,
+        isChatbotTyping: action.payload,
+      };
+
     default:
       return state;
   }

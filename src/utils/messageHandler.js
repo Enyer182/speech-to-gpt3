@@ -24,7 +24,7 @@ const messageHandler = async (
     if (transcript.includes(GENERATE_IMAGE_COMMAND)) {
       const newImageMessage = await generateImageMessage(transcript);
       if (newImageMessage) {
-        setIsSendingMessage(false);
+        // setIsSendingMessage(false);
         setMessages([...messages, newImageMessage]);
         setGeneratedImageUrl(newImageMessage.imageUrl);
       }
@@ -37,11 +37,13 @@ const messageHandler = async (
         setResponse(message);
         let currentIndex = 0;
         const intervalId = setInterval(() => {
-          setIsTypingComplete(false);
+          setIsTypingComplete(
+            trimmedSentences.slice(0, currentIndex + 1).reverse()
+          );
           currentIndex++;
           if (currentIndex >= trimmedSentences.length) {
             clearInterval(intervalId);
-            setIsSendingMessage(false);
+            // setIsSendingMessage(false);
           }
         });
         const newMessages = [
@@ -49,8 +51,8 @@ const messageHandler = async (
           newMessage,
           { from: "chatgpt", content: message },
         ];
-        setTranscript("");
         setMessages(newMessages);
+        setTranscript("");
         setGeneratedImageUrl(null);
       }
     }

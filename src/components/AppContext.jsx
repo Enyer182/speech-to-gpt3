@@ -11,7 +11,7 @@ export const initialState = {
   generatedImageUrl: null,
   voiceAssistantActive: true,
   isTypingComplete: false,
-  typing: "",
+  isChatbotTyping: false,
   isSpeechPaused: false,
 };
 
