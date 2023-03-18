@@ -51,7 +51,6 @@ const Recorder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch({ type: "SET_ERROR", payload: null });
     try {
       await messageHandler(
         state.transcript,
@@ -65,6 +64,7 @@ const Recorder = () => {
         voiceAssistantActiveCallback
       );
     } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: null });
       setErrorCallback(error);
     } finally {
       setLoadingCallback(false);
@@ -78,7 +78,8 @@ const Recorder = () => {
       state.messages,
       state.isSending,
       state.isChatbotTyping,
-      (typing) => dispatch({ type: "SET_TYPING", payload: typing })
+      setIsTypingCompleteCallback,
+      state.response
     );
   }, [
     dispatch,
@@ -89,6 +90,8 @@ const Recorder = () => {
     state.isChatbotTyping,
     state.isTypingComplete,
     state.isSendingMessage,
+    setIsTypingCompleteCallback,
+    state.response,
   ]);
   return (
     <div>

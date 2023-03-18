@@ -10,11 +10,11 @@ const Typing = ({ message }) => {
 
   useEffect(() => {
     if (index === 0) {
-      dispatch({ type: "SET_IS_TYPING", payload: true });
+      dispatch({ type: "SET_IS_CHATBOT_TYPING", payload: true });
     }
 
     if (index === message.length) {
-      dispatch({ type: "SET_IS_TYPING", payload: false });
+      dispatch({ type: "SET_IS_CHATBOT_TYPING", payload: false });
       return;
     }
     const intervalId = setInterval(() => {

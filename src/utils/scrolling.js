@@ -3,7 +3,8 @@ export const handleScroll = (
   clientHeight,
   typing,
   setTyping,
-  chatBodyRef
+  chatBodyRef,
+  isChatbotTyping
 ) => {
   const trimmedSentences = typing.slice().reverse();
   let currentIndex = 0;
@@ -43,7 +44,14 @@ export const interceptScroll = (
     });
   } else if (typing && !isSending && !isChatbotTyping) {
     // If the user is typing and is not currently sending or waiting for a response, delay the scroll until typing is finished
-    handleScroll(scrollHeight, clientHeight, typing, setTyping, chatBodyRef);
+    handleScroll(
+      scrollHeight,
+      clientHeight,
+      typing,
+      setTyping,
+      chatBodyRef,
+      isChatbotTyping
+    );
   } else if (!isChatbotTyping) {
     // If the user is not typing and the chatbot is not currently typing, scroll to the bottom
     chatBodyRef.current.scrollTo({
