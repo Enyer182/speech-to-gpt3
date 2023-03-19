@@ -12,7 +12,8 @@ const messageHandler = async (
   setGeneratedImageUrl,
   setResponse,
   setTranscript,
-  voiceAssistantActive
+  voiceAssistantActive,
+  setError
 ) => {
   if (transcript === "") return;
   setTranscript("");
@@ -27,12 +28,21 @@ const messageHandler = async (
         // setIsSendingMessage(false);
         setMessages([...messages, newImageMessage]);
         setGeneratedImageUrl(newImageMessage.imageUrl);
+      } else if (!newImageMessage) {
+        setError(
+          "Uh oh, it looks like our generator got lost in the matrix. We'll try to reboot it ASAP"
+        );
       }
     } else {
       const { message, trimmedSentences } = await getChatbotResponse(
         transcript,
         voiceAssistantActive
       );
+      if (!message) {
+        setError(
+          "It's not you, it's us. Our API is going through a rebellious phase."
+        );
+      }
       if (message) {
         setResponse(message);
         let currentIndex = 0;
@@ -59,6 +69,9 @@ const messageHandler = async (
   } catch (error) {
     console.log(error);
     setIsSendingMessage(false);
+    setError(
+      "It's not you, it's us. Our API is going through a rebellious phase."
+    );
   }
 };
 

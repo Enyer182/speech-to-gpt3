@@ -60,7 +60,7 @@ const reducer = (state, action) => {
     case "SET_ERROR":
       return {
         ...state,
-        isLoading: action.payload,
+        error: action.payload,
       };
 
     case "SET_IS_CHATBOT_TYPING":
