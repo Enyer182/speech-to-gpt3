@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect } from "react";
+import React, { useRef, useContext, useEffect, useCallback } from "react";
 import { interceptScroll } from "../utils/scrolling";
 import messageHandler from "../utils/messageHandler";
 import ChatHeader from "./ChatHeader";
@@ -14,9 +14,12 @@ const Recorder = () => {
     dispatch({ type: "SET_MESSAGES", payload: messages });
   };
 
-  const setIsTypingCompleteCallback = (isTypingComplete) => {
-    dispatch({ type: "SET_IS_TYPING_COMPLETE", payload: isTypingComplete });
-  };
+  const setIsTypingCompleteCallback = useCallback(
+    (isTypingComplete) => {
+      dispatch({ type: "SET_IS_TYPING_COMPLETE", payload: isTypingComplete });
+    },
+    [dispatch]
+  );
 
   const setIsGeneratingImageCallback = (isGeneratingImage) => {
     dispatch({ type: "SET_IS_GENERATING_IMAGE", payload: isGeneratingImage });
@@ -78,8 +81,9 @@ const Recorder = () => {
       state.messages,
       state.isSending,
       state.isChatbotTyping,
+      state.isTypingComplete,
       setIsTypingCompleteCallback,
-      state.response
+      state.transcript
     );
   }, [
     dispatch,
@@ -91,7 +95,7 @@ const Recorder = () => {
     state.isTypingComplete,
     state.isSendingMessage,
     setIsTypingCompleteCallback,
-    state.response,
+    state.transcript,
   ]);
   return (
     <div>
@@ -101,15 +105,8 @@ const Recorder = () => {
         <div className="chat-body" ref={chatBodyRef}>
           {state.messages.map((message, index) => (
             <ChatMessage
-              setIsSendingMessage={(isSending) =>
-                dispatch({ type: "SET_IS_SENDING_MESSAGE", payload: isSending })
-              }
-              setIsChatbotTyping={(isTypingComplete) =>
-                dispatch({
-                  type: "SET_IS_TYPING_COMPLETE",
-                  payload: isTypingComplete,
-                })
-              }
+              setIsSendingMessage={setIsSendingMessageCallback}
+              setIsChatbotTyping={setIsTypingCompleteCallback}
               key={index}
               message={message}
             />

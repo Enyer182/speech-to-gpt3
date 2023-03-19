@@ -30,10 +30,16 @@ const ChatFooter = ({ handleSubmit }) => {
     stop();
   };
 
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+      dispatch({ type: "SET_IS_LOADING", payload: true });
+    }
+  };
   const handleStop = () => {
     dispatch({ type: "TOGGLE_VOICE_ASSISTANT_ACTIVE" });
     if (state.voiceAssistantActive) {
-      speechSynthesis.pause();
+      speechSynthesis.cancel();
     } else {
       speechSynthesis.resume();
     }
@@ -41,8 +47,6 @@ const ChatFooter = ({ handleSubmit }) => {
   useEffect(() => {
     console.log("voiceAssistantActive:", state.voiceAssistantActive);
   }, [state.voiceAssistantActive]);
-
-  // ... other code
 
   return (
     <div className="chat-footer">
@@ -57,6 +61,7 @@ const ChatFooter = ({ handleSubmit }) => {
         >
           {/* message input */}
           <textarea
+            onKeyDown={onKeyDown}
             value={state.transcript}
             onChange={(e) =>
               dispatch({ type: "SET_TRANSCRIPT", payload: e.target.value })
