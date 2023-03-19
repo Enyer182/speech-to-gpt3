@@ -64,11 +64,11 @@ const Recorder = () => {
         setIsGeneratingImageCallback,
         setResponseCallback,
         setTranscriptCallback,
-        voiceAssistantActiveCallback
+        voiceAssistantActiveCallback,
+        setErrorCallback
       );
     } catch (error) {
-      dispatch({ type: "SET_ERROR", payload: null });
-      setErrorCallback(error);
+      setErrorCallback("some other error has hapenned");
     } finally {
       setLoadingCallback(false);
     }
@@ -101,8 +101,8 @@ const Recorder = () => {
     <div>
       <div className="chat-layout">
         <ChatHeader />
-        {state.error && <div className="error">{state.error.message}</div>}
         <div className="chat-body" ref={chatBodyRef}>
+          {state.error && <div className="error">{state.error}</div>}
           {state.messages.map((message, index) => (
             <ChatMessage
               setIsSendingMessage={setIsSendingMessageCallback}
