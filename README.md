@@ -20,8 +20,7 @@ npm install --legacy-peer-deps. Please note that this command may be required be
 I'll be working to find alternatives for this library.
 Please note that real-time speech recognition may not work in Firefox, I'm working on finding a solution that works across all browsers.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+
 
 
 ### `Usage`
