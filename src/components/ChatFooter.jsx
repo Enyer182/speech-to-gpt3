@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
@@ -36,18 +36,28 @@ const ChatFooter = ({ handleSubmit }) => {
       dispatch({ type: "SET_IS_LOADING", payload: true });
     }
   };
+
+  const voiceAssistantActiveCallback = (voiceAssistantActive) => {
+    dispatch({
+      type: "SET_VOICE_ASSISTANT_ACTIVE",
+      payload: voiceAssistantActive,
+    });
+  };
+
   const handleStop = () => {
-    dispatch({ type: "TOGGLE_VOICE_ASSISTANT_ACTIVE" });
+    voiceAssistantActiveCallback(false);
     if (state.voiceAssistantActive) {
-      speechSynthesis.pause();
-    } else {
-      speechSynthesis.resume();
+      speechSynthesis.cancel();
     }
   };
 
-  // useEffect(() => {
-  //   console.log("voiceAssistantActive:", state.voiceAssistantActive);
-  // }, [state.voiceAssistantActive]);
+  const handleStart = () => {
+    voiceAssistantActiveCallback(true);
+  };
+
+  useEffect(() => {
+    console.log("voiceAssistantActive:", state.voiceAssistantActive);
+  }, [state.voiceAssistantActive]);
 
   return (
     <div className="chat-footer">
@@ -106,7 +116,7 @@ const ChatFooter = ({ handleSubmit }) => {
             ) : (
               <StopCircleIcon
                 style={{ fontSize: "50px" }}
-                onClick={handleStop}
+                onClick={handleStart}
               />
             )}
           </div>
