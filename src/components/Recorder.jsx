@@ -37,13 +37,6 @@ const Recorder = () => {
     dispatch({ type: "SET_IS_SENDING_MESSAGE", payload: isSendingMessage });
   };
 
-  const voiceAssistantActiveCallback = (voiceAssistantActive) => {
-    dispatch({
-      type: "SET_VOICE_ASSISTANT_ACTIVE",
-      payload: voiceAssistantActive,
-    });
-  };
-
   const setErrorCallback = (error) => {
     dispatch({ type: "SET_ERROR", payload: error });
   };
@@ -64,7 +57,7 @@ const Recorder = () => {
         setIsGeneratingImageCallback,
         setResponseCallback,
         setTranscriptCallback,
-        voiceAssistantActiveCallback,
+        state.voiceAssistantActive,
         setErrorCallback
       );
     } catch (error) {
@@ -115,6 +108,9 @@ const Recorder = () => {
         <div>
           <ChatFooter handleSubmit={handleSubmit} />
         </div>
+      </div>
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        Made with ❤️ by Enyer
       </div>
     </div>
   );
